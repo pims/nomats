@@ -35,7 +35,7 @@ job "hello" {
 
       config {
 
-        command = "/usr/bin/statik"
+        command = "/usr/local/bin/statik"
         args    = [":${NOMAD_PORT_www}"]
       }
       

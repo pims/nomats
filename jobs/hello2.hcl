@@ -36,7 +36,7 @@ job "hello2" {
 
       config {
 
-        command = "/Users/tim/code/golang/bin/statik"
+        command = "/usr/local/bin/statik"
         args    = [":${NOMAD_PORT_www}"]
       }
 
