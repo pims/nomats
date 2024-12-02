@@ -26,7 +26,7 @@ func main() {
 	defer done()
 	g, gctx := errgroup.WithContext(ctx)
 
-	srv := nomats.New(cfg.TailscaleDir, cfg.UpstreamListenAddr)
+	srv := nomats.New(cfg)
 
 	nomadCfg := api.DefaultConfig()
 	nomadCfg.Address = cfg.NomadAddr

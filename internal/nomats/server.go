@@ -16,6 +16,8 @@ import (
 // Server keeps a list of upstreams for a given nomad service
 // and starts a tsnet server to proxy to upstreams
 type Server struct {
+	authKey string
+
 	mu      sync.RWMutex
 	proxies map[string]*loadBalancer
 	servers map[string]*tsnet.Server
@@ -24,12 +26,13 @@ type Server struct {
 	listenAddr string
 }
 
-func New(dir string, listenAddr string) *Server {
+func New(cfg Config) *Server {
 	return &Server{
 		proxies:    map[string]*loadBalancer{},
 		servers:    map[string]*tsnet.Server{},
-		dir:        dir,
-		listenAddr: listenAddr,
+		dir:        cfg.TailscaleDir,
+		listenAddr: cfg.UpstreamListenAddr,
+		authKey:    cfg.TailscaleAuthKey,
 	}
 }
 
@@ -51,7 +54,7 @@ func (s *Server) AddProxy(hostname string, remote string) error {
 	os.MkdirAll(filepath.Join(s.dir, hostname), 0700)
 	srv := &tsnet.Server{
 		Hostname:  hostname,
-		AuthKey:   os.Getenv("TS_AUTHKEY"),
+		AuthKey:   s.authKey,
 		Ephemeral: true,
 		Dir:       filepath.Join(s.dir, hostname),
 	}
